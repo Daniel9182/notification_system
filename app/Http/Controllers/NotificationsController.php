@@ -1,0 +1,106 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\notifications;
+use App\Models\notification_types;
+use App\Models\users;
+use App\Models\images;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+
+class NotificationsController extends Controller
+{
+    
+
+    public function view($id,Request $request){
+
+        $post = notifications::find($id);
+        $type = $post->types;
+        $image = $post->images;
+        $type_post = $type[0]->id;
+        $content = notification_types::find($type_post); 
+        $users = $content->users;
+        
+        
+        $user = users::find($request->session()->get('user_id'));
+        $types_user = $user->types;
+
+
+        return view('user.viewpost',['data'=>$post,'image'=>$image,'types'=>$type,'users'=>$users,'types_user'=>$types_user]);
+
+    }
+
+    public function newpost(Request $request){
+        
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|min:5|max:255',
+            'description' => 'required|min:10|max:2000',
+            'image' => 'required|file|mimes:jpeg,png,gif,pdf|max:2048',
+        ]);
+        switch ($request->tipopost) {
+            case '1':
+                $url = '/post/1';
+                break;
+            case '2':
+                $url = '/post/2';
+                break;
+            case '3':
+                $url = '/post/3';
+                break;
+            default: 
+                $url = '/';
+                break;
+        }
+
+    if ($validator->fails()) {
+        return redirect($url)
+            ->withErrors($validator)
+            ->withInput();
+        }
+
+
+        $post = new notifications();
+        $post->title = $request->title;
+        $post->description = $request->description;
+        $post->image = 1;
+        $post->add_by = $request->session()->get('user_id');
+        $post->save();
+
+        $imagenes = $request->file('image')->store('public/post/imagen');
+        $url = Storage::url($imagenes);
+        $imagen = images::create([
+            'url'=>$url
+        ]);
+        $imagen->save();
+
+        $imagen->notifications()->attach([$post->id]);
+        $post->types()->attach([$request->tipopost]);
+     
+        return redirect($url);
+    }
+
+    public function post($id,Request $request){
+       
+        $user = users::find($request->session()->get('user_id'));
+        $user_types = $user->types;
+        $type_notification = notification_types::find($id);
+
+        $content = notification_types::find($id); 
+     
+        $notifications = $content->notifications;
+
+        if (isset($notifications)) {
+           $list = $notifications;
+        } else {
+           $list = null;
+        }
+
+        return view('user.list',['content'=>$list,'data'=>$user,'type'=>$user_types, 'notification'=>$type_notification,'data'=>$notifications]);
+
+    }
+
+
+}
