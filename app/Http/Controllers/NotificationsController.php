@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 
 use App\Mail\PostMail;
 use Illuminate\Support\Facades\Mail;
+use Twilio\Rest\Client;
 
 class NotificationsController extends Controller
 {
@@ -119,6 +120,19 @@ class NotificationsController extends Controller
 
             foreach ($addressee as $key => $user) {
                 Mail::to($user->email)->send(new PostMail($post,$type_post[0]));
+                
+                $sid = env('TWILIO_SID');
+                $token = env('TWILIO_AUTH_TOKEN');
+                $twilio = new Client($sid, $token);
+                
+                $twilio->messages
+                        ->create(
+                            '+52'.$user->phone, 
+                            [
+                                'from' => env('TWILIO_PHONE_NUMBER'),
+                                'body' =>  'You have new posts "'. $post->title .'" to enjoy "Notifications systems" programmed by Daniel Mendez Camacho',
+                            ]);
+
             } 
             return redirect('/post/'.$type_post[0]->id);
 
