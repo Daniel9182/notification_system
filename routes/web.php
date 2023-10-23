@@ -27,3 +27,4 @@ Route::get('subscribe/{id}', [UsersController::class, 'subscribe'])->name('user.
 Route::post('newPost', [NotificationsController::class, 'newpost'])->name('user.newpost');
 Route::get('post/{id}', [NotificationsController::class, 'post'])->name('user.post');
 Route::get('viewpost/{id}', [NotificationsController::class, 'view'])->name('view.post');
+Route::get('sendPost/{id}', [NotificationsController::class, 'sendPost'])->name('send.post');

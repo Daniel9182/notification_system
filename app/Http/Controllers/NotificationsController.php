@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 
+use App\Mail\PostMail;
+use Illuminate\Support\Facades\Mail;
+
 class NotificationsController extends Controller
 {
     
@@ -99,6 +102,29 @@ class NotificationsController extends Controller
         }
 
         return view('user.list',['content'=>$list,'data'=>$user,'type'=>$user_types, 'notification'=>$type_notification,'data'=>$notifications]);
+
+    }
+
+    public function sendPost($id,Request $request){
+
+        $user = users::find($request->session()->get('user_id'));
+        $type = $user->types;
+        
+        if(in_array(2,array_column(json_decode($type,true),'id'))){
+            //is admin
+            $post = notifications::find($id);
+            $type_post = $post->types;
+            $type_notification = notification_types::find($type_post[0]->id);
+            $addressee = $type_notification->users;
+
+            foreach ($addressee as $key => $user) {
+                Mail::to($user->email)->send(new PostMail($post,$type_post[0]));
+            } 
+            return redirect('/post/'.$type_post[0]->id);
+
+
+        }
+        
 
     }
 

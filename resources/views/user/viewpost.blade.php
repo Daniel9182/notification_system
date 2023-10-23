@@ -46,7 +46,7 @@
                 </table>
             </div>
         </div>
-        <a class="btn btn-primary btn-lg" href="{{'../post/'.$type->id}}" role="button">Send</a>
+        <a class="btn btn-primary btn-lg" href="{{route('send.post',['id'=>$data->id])}}" role="button">Send</a>
     </div>
     @else
         <h4>have a good day!</h4>

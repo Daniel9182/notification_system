@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
 use App\Mail\NotificationMail;
+use App\Mail\SubscribeMail;
 
 use Illuminate\Http\Request;
 
@@ -123,8 +124,11 @@ class UsersController extends Controller
         $user = users::find($request->session()->get('user_id'));
         
         if (!$user->notifications()->where('notification_types_id', $id)->exists()) {
-                $user->notifications()->attach([$id]);   
+                $user->notifications()->attach([$id]);  
+                
+                Mail::to($user->email)->send(new SubscribeMail($user)); 
                 return redirect('/dashboard');
+
             }
             else{
                 return 'ya estas suscrito';
