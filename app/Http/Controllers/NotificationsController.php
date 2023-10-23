@@ -135,8 +135,6 @@ class NotificationsController extends Controller
 
             } 
             return redirect('/post/'.$type_post[0]->id);
-
-
         }
         
 
