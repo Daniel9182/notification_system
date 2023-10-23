@@ -8,7 +8,7 @@
     
     @if(session('user_id'))
      <div class="carousel-caption d-none d-md-block">
-        <a href="" style="color: white"><h1>Sports</h1></a>
+        <a href="{{route('user.post',1)}}" style="color: white"><h1>Sports</h1></a>
         <p>Subscribe to our sports hub for live updates, expert insights, and an interactive community. Join us in celebrating the world of sports!</p>
       </div>
       @endif
@@ -19,7 +19,7 @@
     
     @if(session('user_id'))
         <div class="carousel-caption d-none d-md-block">
-            <a href="" style="color: white"><h1>Movies</h1></a>
+            <a href="{{route('user.post',3)}}" style="color: white"><h1>Movies</h1></a>
             <p>Calling all movie lovers! Subscribe to our movie space and unlock a world of cinematic wonders. Dive into reviews, behind-the-scenes exclusives, and recommendations for your next movie night.</p>
         </div>
         @endif
@@ -30,7 +30,7 @@
     
     @if(session('user_id'))
         <div class="carousel-caption d-none d-md-block">
-                <a href="" style="color: white"><h1>Finances</h1></a>
+                <a href="{{route('user.post',2)}}" style="color: white"><h1>Finances</h1></a>
                 <p>Unlock financial wisdom. Subscribe to stay updated on investments, savings, and economic insights.</p>
             </div>
             @endif
