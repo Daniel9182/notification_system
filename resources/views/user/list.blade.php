@@ -12,8 +12,8 @@
       @if (count($data)>0)
       
         @foreach ($data as $item)
-        <div class="col-sm-6">
-          <div class="card">
+        <div class="col-sm-4">
+          <div class="card" style="margin: 0.1rem">
             <div class="card-body">
               <h5 class="card-title">{{$item->title}}</h5>
               <p class="card-text">{{$item->description}}</p>

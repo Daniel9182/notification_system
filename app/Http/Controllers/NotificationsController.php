@@ -46,16 +46,16 @@ class NotificationsController extends Controller
         ]);
         switch ($request->tipopost) {
             case '1':
-                $url = '/post/1';
+                $url_redirect = '/post/1';
                 break;
             case '2':
-                $url = '/post/2';
+                $url_redirect = '/post/2';
                 break;
             case '3':
-                $url = '/post/3';
+                $url_redirect = '/post/3';
                 break;
             default: 
-                $url = '/';
+                $url_redirect = '/';
                 break;
         }
 
@@ -82,8 +82,11 @@ class NotificationsController extends Controller
 
         $imagen->notifications()->attach([$post->id]);
         $post->types()->attach([$request->tipopost]);
+
+        
+        notify()->success('Saved data!');
      
-        return redirect($url);
+        return redirect($url_redirect);
     }
 
     public function post($id,Request $request){
@@ -134,6 +137,8 @@ class NotificationsController extends Controller
                             ]);
 
             } 
+            
+            notify()->success('Notifications sent!');
             return redirect('/post/'.$type_post[0]->id);
         }
         

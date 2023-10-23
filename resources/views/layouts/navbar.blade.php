@@ -31,7 +31,7 @@
     @else
     
     <div style="margin: 0.5rem;">    
-    <button  class="btn btn-outline-primary my-2 my-sm-0" data-toggle="modal" data-target="#SignUpUser">Sign Up</button><label for="">  _</label>
+    <button  class="btn btn-outline-primary my-2 my-sm-0" data-toggle="modal" data-target="#SignUpUser">Sign Up</button><label for="">  </label>
     </div>
     
     <div style="margin: 1rem;">
@@ -39,3 +39,4 @@
     </div> 
     @endif
 </nav>
+

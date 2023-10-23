@@ -34,6 +34,8 @@ class UsersController extends Controller
 
         ]);
     if ($validator->fails()) {
+        
+    notify()->error( 'enter the corresponding values');
         return redirect('/')
             ->withErrors($validator)
             ->withInput();
@@ -56,6 +58,7 @@ class UsersController extends Controller
 
     Mail::to($request->email)->send(new NotificationMail($newUser));
 
+    notify()->success( 'You have registered!');
     return redirect('/');
 
     }
@@ -69,6 +72,8 @@ class UsersController extends Controller
         ]);
 
     if ($validator->fails()) {
+        
+        notify()->error( 'enter the corresponding values');
         return redirect('/')
             ->withErrors($validator)
             ->withInput();
@@ -83,18 +88,25 @@ class UsersController extends Controller
                if (Hash::check($request->password_access, $user->password)) {
                     $request->session()->put('user_id', $user->id);
                     $request->session()->put('name', $user->name);
+                    notify()->success( 'Welcome Back!');
                     return redirect('/dashboard');
 
                 }else{
-                    return 'password incorrecta';
+                    
+                    notify()->error( 'wrong username or password');
+                    return redirect('/');
                 }
 
             }else{
-                return 'usuario no encontrado';
+
+                notify()->error( 'This user does not exist');
+                return redirect('/');
             }
             // $user contiene el usuario encontrado
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             // No se encontró un usuario con la dirección de correo especificada
+            
+            notify()->error( 'This user does not exist');
             return redirect('/');
         }
         
@@ -105,6 +117,10 @@ class UsersController extends Controller
         $request->session()->forget('user_id');
         $request->session()->forget('name');
         $request->session()->flush();
+        
+
+        
+        notify()->success( 'You logged out!');
         return redirect('/');
     }
 
@@ -127,11 +143,13 @@ class UsersController extends Controller
                 $user->notifications()->attach([$id]);  
                 
                 Mail::to($user->email)->send(new SubscribeMail($user)); 
+                
+                notify()->success( 'You have subscribed!');
                 return redirect('/dashboard');
 
             }
             else{
-                return 'ya estas suscrito';
+                notify()->error( 'You are already subscribed');
             }
 
     }
