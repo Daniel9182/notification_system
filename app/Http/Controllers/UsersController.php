@@ -5,6 +5,9 @@ use App\Models\users;
 use App\Models\notification_types;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+
+use App\Mail\NotificationMail;
 
 use Illuminate\Http\Request;
 
@@ -49,7 +52,9 @@ class UsersController extends Controller
 
         $newUser->types()->attach([1]);
 
-        
+
+    Mail::to($request->email)->send(new NotificationMail($newUser));
+
     return redirect('/');
 
     }
